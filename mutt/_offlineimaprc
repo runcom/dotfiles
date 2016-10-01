@@ -1,0 +1,45 @@
+[general]
+accounts = Gmail
+fsync = false
+ui = ttyui
+
+[Account Gmail]
+localrepository = Gmail-Local
+remoterepository = Gmail-Remote
+status_backend = sqlite
+
+[Repository Gmail-Local]
+type = Maildir
+localfolders = ~/Mail
+
+nametrans = lambda folder: re.sub('spam', '[Gmail].Spam',
+                           re.sub('drafts', '[Gmail].Drafts',
+                           re.sub('sent', '[Gmail].Sent Mail',
+                           re.sub('flagged', '[Gmail].Starred',
+                           re.sub('trash', '[Gmail].Trash', folder)))))
+sep = .
+
+[Repository Gmail-Remote]
+type = Gmail
+maxconnections = 2
+remoteuser = amurdaca@GMAIL.com
+remotepass = 
+realdelete = no
+createfolders = False
+folderfilter = lambda foldername: foldername not in ['[Gmail]/All Mail', '[Gmail]/Important']
+nametrans = lambda folder: re.sub('.*Spam$', 'spam',
+			   re.sub('.*Drafts$', 'drafts',
+			   re.sub('.*Sent Mail$', 'sent',
+			   re.sub('.*Starred$', 'flagged',
+			   re.sub('.*Trash$', 'trash', folder)))))
+
+# Necessary as of OfflineIMAP 6.5.4
+sslcacertfile = /etc/ssl/certs/ca-bundle.crt
+
+[mbnames]
+enabled = yes
+filename = ~/.mutt/mailboxes
+header = "mailboxes "
+peritem = "+%(accountname)s/%(foldername)s"
+sep = " "
+footer = "\n"

@@ -1,0 +1,9 @@
+[Unit]
+Description=Mutt email notifier
+
+[Service]
+ExecStart=/usr/local/bin/email_notifier
+Restart=always
+
+[Install]
+WantedBy=default.target

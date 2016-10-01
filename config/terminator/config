@@ -1,0 +1,21 @@
+[global_config]
+[keybindings]
+  broadcast_off = None
+  edit_window_title = None
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      profile = default
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    background_image = None
+    font = Monospace 10.7998046875
+    login_shell = True
+    scrollback_infinite = True
+    use_system_font = False

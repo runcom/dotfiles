@@ -1,0 +1,328 @@
+set nocompatible
+setglobal modeline
+let mapleader = ","
+"let maplocalleader = ","
+filetype off
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+Plugin 'gmarik/vundle'
+
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
+"Plugin 'scrooloose/syntastic'
+" supertab? neocomplete? youcompleteme?
+"Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Shougo/neocomplete'
+Plugin 'tpope/vim-fugitive'
+Plugin 'majutsushi/tagbar' "?
+Plugin 'xolox/vim-easytags' "?
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'xolox/vim-misc'
+Plugin 'tpope/vim-surround' "?
+Plugin 'tpope/vim-repeat' "?
+Plugin 'edsono/vim-matchit' "?
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'sjl/gundo.vim'
+Plugin 'corntrace/bufexplorer'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'godlygeek/tabular' "?
+Plugin 'bling/vim-airline'
+Plugin 'kien/ctrlp.vim'
+Plugin 'fatih/vim-go'
+
+filetype plugin indent on
+syntax on
+
+:set t_Co=256
+:set background=dark
+set guifont=Inconsolata\ for\ Powerline\ 12
+colorscheme distinguished
+
+" ----------------------------------------------
+" Setup basic Vim behaviour
+" ----------------------------------------------
+
+set autoindent
+set autowrite       " Writes on make/shell commands
+set backspace=start,indent,eol
+set cf              " Enable error files & error jumping.
+set cursorline
+set hidden          " Allow buffer switching without saving
+set history=1000    " Remember a decent way back
+set laststatus=2    " Always show status line.
+set mousehide
+set nowrap          " Line wrapping off
+set number          " line numbers
+set ruler           " Ruler on
+set scrolloff=3     " More context around cursor
+set timeoutlen=1000
+set wildmode=list:longest " Shell-like behaviour for command autocompletion
+set fillchars+=vert:\  "Set the window borders to not have | chars in them
+
+" GVim Options
+set guioptions-=T     " no toolbar
+set guioptions-=m     " no menu
+set guioptions+=LlRrb " Hack which adds all scrollbars so that they can be removed, line below breaks without this
+set guioptions-=LlRrb " Remove all scrollbars
+
+" Search options
+set hlsearch        " highlight search matches...
+set incsearch       " ...as you type
+set ignorecase
+set smartcase
+
+set cc=80
+"set shiftwidth=2
+"set smarttab
+"set tabstop=2
+"set expandtab
+"setlocal ts=4 sts=4 sw=4
+"set shortmess+=AI -> remove ATTENTION message in a swp file already exists
+set shortmess+=I
+set encoding=utf-8
+set foldmethod=indent
+set foldnestmax=10
+set nofoldenable
+set foldlevel=1
+map <Left> <Nop>
+map <Right> <Nop>
+map <Up> <Nop>
+map <Down> <Nop>
+map <C-k> <C-w><Up>
+map <C-j> <C-w><Down>
+map <C-l> <C-w><Right>
+map <C-h> <C-w><Left>
+map <M-l> :bnext<cr>
+map <M-h> :bprevious<cr>
+set backupdir=~/.vim/backup//
+set directory=~/.vim/swap//
+set undodir=~/.vim/undo//
+set undofile
+set undolevels=1000
+set undoreload=10000
+
+set rtp^=~/.vim/bundle/ctrlp.vim
+let g:ctrlp_max_files=0
+let g:ctrlp_max_height=50
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/](\.)?(cache|git|hg|svn)$',
+  \ 'file': '\v\.(zip|swp|exe|so|dll)$',
+  \ }
+
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+let g:indent_guides_enable_on_vim_startup = 1
+nmap <silent> <Leader>- <Plug>IndentGuidesToggle
+
+" VIM-GO
+au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>t <Plug>(go-test)
+au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+au FileType go nmap gd <Plug>(go-def)
+
+"au BufWritePost *.go silent! !gotags -f="$HOME/tags" -R $GOPATH/src &
+
+" CONFIG FOR GOTAGS https://github.com/jstemmer/gotags
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+\ }
+
+" ULTISNIP
+" ========
+let g:UltiSnipsSnippetDirectories=["UltiSnips", "snips"]
+let g:UltiSnipsExpandTrigger = "<c-tab>" "?
+let g:UltiSnipsJumpForwardTrigger="<c-tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-g>"
+let g:UltiSnipsListSnippets = "<c-a>"
+
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'powerlineish'
+
+" CUSTOM GOOGLIN' FUN!
+" ====================
+nmap <silent> <Leader>qg :call GoogleSearch()<cr>
+nmap <silent> <Leader>qu :call UrlOpen()<cr>
+
+fu! UrlOpen()
+" TODO: fix regex url without http in front
+  let url = matchstr(expand("<cWORD>"), 'https\?:\/\/\(\w\+\(:\w\+\)\?@\)\?\([A-Za-z][-_0-9A-Za-z]*\.\)\{1,}\(\w\{2,}\.\?\)\{1,}\(:[0-9]\{1,5}\)\?\S*')
+  if !empty(url)
+    call xolox#misc#open#url(url)
+  else
+    echo "no url here"
+  endif
+endfunction
+
+fu! GoogleSearch()
+  call inputsave()
+  let qs = input('Search for: ')
+  call inputrestore()
+  if exists('qs') && qs != ""
+    call xolox#misc#open#url("http://www.google.com/search?q=".qs)
+  endif
+endfunction
+
+" ----------------------------------------------
+" Command Shortcuts
+" ----------------------------------------------
+
+" make W and Q act like w and q
+command! W :w
+command! Q :q
+
+" make Y consistent with C and D
+nnoremap Y y$
+
+" ,] to toggle the tags sidebar
+nmap <F9> :TagbarToggle<CR>
+
+" ,c to show hidden characters
+set listchars=tab:>-,trail:·,eol:$
+nmap <silent> <leader>c :set nolist!<CR>
+
+" ,f to find current file in NERDTree
+map <silent> <Leader>f :NERDTreeFind<CR>
+nmap <F8> :NERDTreeToggle<CR>
+
+" ,h to toggle search result highlighting
+noremap <silent> <leader>h :set hls!<CR>
+
+" ,s to toggle spelling highlighting
+nmap <silent> <Leader>s :setlocal spell! spelllang=en_gb<CR>
+
+" ,sw to strip whitespace off the ends
+nmap <silent> <Leader>sw :call StripTrailingWhitespace()<CR>
+
+" ,t to clear cache and fuzzy search files; ,T in current file's directory
+" Rebuilds the cache first, move to commented out line to just search
+map <silent> <leader>t :ClearCtrlPCache<cr>\|:CtrlP<cr>
+map <silent> <leader>T :ClearCtrlPCache<cr>\|:CtrlPCurFile<cr>
+
+" ,u to toggle undo history browser
+nnoremap <F7> :GundoToggle<CR>
+
+" ,w to toggle line wrap
+:map <silent> <Leader>w :set wrap!<CR>
+
+" C-c to copy to the global buffer
+"vmap <A-c> "+y<CR>
+
+" C-v to paste from the global buffer
+"map <A-v> "+p<CR>
+
+" Ctrl+s to write the file (Will scroll-lock Vim in the terminal!)
+map <C-s> <esc>:w<CR>
+imap <C-s> <esc>:w<CR>
+
+" Ignores files in any VCS or tmp directory
+set wildignore+=tmp/*,*.so,*.swp,*.zip
+
+" Ctrl+\ to view the Vim style of the text under the cursor
+nmap <C-\> :call <SID>SynStack()<CR>
+
+" F5 to reload doc
+map <silent> <F5> <esc>:e %<CR>
+
+" ----------------------------------------------
+" Window split & size shortcuts
+" ----------------------------------------------
+
+" C-A-h and C-A-l to resize vertical split
+map <Leader>rl :vertical resize -7<CR>
+map <Leader>rh :vertical resize +7<CR>
+
+" C-A-j and C-A-k to resize horizontal split
+map <Leader>rk :resize -5<CR>
+map <Leader>rj :resize +5<CR>
+
+" ----------------------------------------------
+" Setup Misc Vim Behaviours
+" ----------------------------------------------
+
+autocmd FileType make set noexpandtab
+
+" Extend % to do/end etc
+runtime! plugin/matchit.vim
+
+" Highlight trailing whitespace
+highlight RedundantSpaces term=standout ctermbg=red guibg=red
+match RedundantSpaces /\s\+$\| \+\ze\t/ "\ze sets end of match so only spaces highlighted
+
+" A whole bunch of NERDTree configuration stolen from carlhuda's janus
+let NERDTreeIgnore=['\.rbc$', '\~$']
+
+" Make NERDTree close when you open a file from it. Helps recover screen
+" space!
+let NERDTreeQuitOnOpen=1
+
+" Jump to last cursor position when opening a file
+" Don't do it when writing a commit log entry
+autocmd BufReadPost * call SetCursorPosition()
+function! SetCursorPosition()
+  if &filetype !~ 'commit\c'
+    if line("'\"") > 0 && line("'\"") <= line("$")
+      exe "normal g`\""
+    endif
+  end
+endfunction
+
+" strip trailing whitespace<foo&bar>
+"autocmd BufWritePre,FileWritePre * call StripTrailingWhitespace()
+function! StripTrailingWhitespace()
+	normal mz
+	normal Hmy
+	exec '%s/\s*$//g'
+	normal 'yz<cr>
+	normal `z
+endfunction
+
+" Add function for showing the syntax tag for the selected text
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+
+" ----------------------------------------------
+"  Setup Ctags support
+" ----------------------------------------------
+
+" TODO:
+
+" ----------------------------------------------
+"  Source any local config
+"  Keep this last to make sure local config overrides global!
+" ----------------------------------------------
+if filereadable(expand("~/.vimrc.local"))
+  source ~/.vimrc.local
+endif

@@ -1,0 +1,11 @@
+#alias git-all="git add . && git commit -am \"$(wget -q whatthecommit.com -O - | sed -n '/<p>/,/<\/p>/p' | sed -e '1s/.*<p>//' -e '$s/<\/p>.*//')\" && git push --all"
+alias git=hub
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias git-tree='git log --graph --oneline --all --decorate'
+alias git-patch='git format-patch -s -n -o patches/'
+alias dc='docker-compose'
+alias git-remove-local='git branch --merged master | grep -v "\* master" | xargs -n 1 git branch -d'
+alias d='docker'

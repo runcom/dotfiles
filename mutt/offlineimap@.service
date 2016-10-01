@@ -1,0 +1,12 @@
+[Unit]
+Description=Offlineimap Service for account %i
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/offlineimap -o
+TimeoutStopSec=10
+KillSignal=SIGUSR2
+
+[Install]
+WantedBy=mail.target

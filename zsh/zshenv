@@ -1,0 +1,5 @@
+export PATH=$PATH:/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:$HOME/bin
+# golang ftw
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME
+export CDPATH=/home/amurdaca/src/github.com/
