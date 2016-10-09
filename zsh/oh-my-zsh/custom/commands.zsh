@@ -59,20 +59,35 @@ rkt-compile() {
 }
 
 docker-compile-deps() {
-	#set -e
+	set -e
 	set -x
 
 	old_gopath="${GOPATH}"
-	dockerfile_path="${GOPATH}/src/github.com/docker/docker/Dockerfile"
-	RUNC_COMMIT=$(grep RUNC_COMMIT $dockerfile_path | head -n 1 | cut -d" " -f 3)
-	echo $RUNC_COMMIT
-	current_runc_commit=$(command -v docker-runc >/dev/null 2>&1 && docker-runc --version | grep commit | cut -d" " -f 2)
-	echo $current_runc_commit
 
-	CONTAINERD_COMMIT=$(grep CONTAINERD_COMMIT $dockerfile_path | head -n 1 | cut -d" " -f 3)
-	echo $CONTAINERD_COMMIT
+	dockerfile_path="${GOPATH}/src/github.com/docker/docker/hack/dockerfile/install-binaries.sh"
+	if [ -e "$dockerfile_path" ]; then
+		RUNC_COMMIT=$(grep RUNC_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
+		CONTAINERD_COMMIT=$(grep CONTAINERD_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
+		GRIMES_COMMIT=$(grep GRIMES_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
+
+		echo "Building grimes"
+		export GOPATH="$(mktemp -d)"
+		git clone git://github.com/crosbymichael/grimes.git "$GOPATH/src/github.com/crosbymichael/grimes"
+		pushd "$GOPATH/src/github.com/crosbymichael/grimes"
+		git checkout -q "$GRIMES_COMMIT"
+		make
+		sudo cp init /usr/local/bin/init
+		popd
+		rm -rf ${GOPATH}
+	else
+		dockerfile_path="${GOPATH}/src/github.com/docker/docker/Dockerfile"
+		RUNC_COMMIT=$(grep RUNC_COMMIT $dockerfile_path | head -n 1 | cut -d" " -f 3)
+		CONTAINERD_COMMIT=$(grep CONTAINERD_COMMIT $dockerfile_path | head -n 1 | cut -d" " -f 3)
+
+	fi
+
+	current_runc_commit=$(command -v docker-runc >/dev/null 2>&1 && docker-runc --version | grep commit | cut -d" " -f 2)
 	current_containerd_commit=$(command -v docker-containerd >/dev/null 2>&1 && docker-containerd --version | cut -d" " -f 5)
-	echo $current_containerd_commit
 
 	if [ -n "${RUNC_COMMIT}" ]; then
 		if [ "${current_runc_commit}" != "${RUNC_COMMIT}" ]; then
