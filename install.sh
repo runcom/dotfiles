@@ -50,7 +50,7 @@ DOTFILES_ROOT=`pwd`
 #EOF'
 #sudo dnf clean all
 sudo dnf -y update
-sudo dnf install mosh git-email terminator zsh cmake htop python-devel ctags vim-enhanced jq the_silver_searcher vim-X11 ruby ruby-devel gnome-tweak-tool gnome-shell-extension-pomodoro graphviz perl-Text-CharWidth krb5-workstation google-chrome-stable golang libvirt-sandbox mercurial golang-godoc golang-github-cpuguy83-go-md2man godep recode ostree python-ldap pastebinit 'dnf-command(system-upgrade)' keepassx terminus-fonts pidgin overpass-fonts
+sudo dnf install mosh git-email terminator zsh cmake htop python-devel ctags vim-enhanced jq the_silver_searcher vim-X11 ruby ruby-devel gnome-tweak-tool gnome-shell-extension-pomodoro graphviz perl-Text-CharWidth krb5-workstation google-chrome-stable golang libvirt-sandbox mercurial golang-godoc golang-github-cpuguy83-go-md2man godep recode ostree python-ldap pastebinit 'dnf-command(system-upgrade)' keepassx terminus-fonts pidgin overpass-fonts rust cargo
 
 # XXX(runcom): terminus-fonts in terminator! set to 15 size!!!!!!!!!
 echo "set size=15 in terminator for terminus-fonts"
