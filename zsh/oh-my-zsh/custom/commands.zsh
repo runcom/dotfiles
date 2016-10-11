@@ -59,7 +59,7 @@ rkt-compile() {
 }
 
 docker-compile-deps() {
-	set -e
+	#set -e
 	set -x
 
 	old_gopath="${GOPATH}"
