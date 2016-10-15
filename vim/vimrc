@@ -107,6 +107,9 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 let $GOPATH=$HOME
 let g:rustfmt_autosave = 1
 let g:rustfmt_fail_silently = 1
+nnoremap gr :YcmCompleter GoTo<CR>
+"TODO(runcom): would be nice for the rust rpm to ship the src code?
+"let g:ycm_rust_src_path = '$HOME/koding/rust/src'
 
 if has("gui_running")
     "if has("gui_gtk2")
