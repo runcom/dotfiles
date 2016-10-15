@@ -8,7 +8,7 @@ Plug 'tpope/vim-scriptease'
 Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/unite.vim'
 Plug 'justinmk/vim-sneak'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --gocode-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --gocode-completer --racer-completer' }
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'nanotech/jellybeans.vim'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -46,6 +46,7 @@ let g:cfmt_style = '-linux'
 "
 " Settings
 "
+
 set noerrorbells                " No beeps
 set number                      " Show line numbers
 set backspace=indent,eol,start  " Makes backspace key more powerful.
@@ -104,6 +105,7 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 " TODO: CTRLP not finding files at all????
 
 let $GOPATH=$HOME
+let g:rustfmt_autosave = 1
 
 if has("gui_running")
     "if has("gui_gtk2")
