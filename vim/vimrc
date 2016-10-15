@@ -108,8 +108,9 @@ let $GOPATH=$HOME
 let g:rustfmt_autosave = 1
 let g:rustfmt_fail_silently = 1
 nnoremap gr :YcmCompleter GoTo<CR>
-"TODO(runcom): would be nice for the rust rpm to ship the src code?
-"let g:ycm_rust_src_path = '$HOME/koding/rust/src'
+" FIXME after https://bugzilla.redhat.com/show_bug.cgi?id=1385262
+let g:rustc_version = system("rustc --version | sed -e 's/rustc //g' | tr -d '\n'")
+let g:ycm_rust_src_path = "/usr/src/debug/rustc-" . g:rustc_version . "/src"
 
 if has("gui_running")
     "if has("gui_gtk2")
