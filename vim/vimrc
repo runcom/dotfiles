@@ -7,40 +7,29 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
 Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/unite.vim'
-Plug 'moll/vim-bbye'
 Plug 'justinmk/vim-sneak'
-"Plug 'ervandew/supertab'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh --gocode-completer' }
-"Plug 'git://git.wincent.com/command-t.git'
 Plug 'fatih/vim-go', {'for': 'go'}
-"Plug 'fatih/molokai'
 Plug 'nanotech/jellybeans.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdcommenter'
-"Plug 'scrooloose/nerdtree'
 Plug 'SirVer/ultisnips'
 Plug 'Raimondi/delimitMate'
 Plug 't9md/vim-choosewin'
-Plug 'kchmck/vim-coffee-script', {'for' : 'coffee'}
-"Plug 'tomtom/tcomment_vim'
 Plug 'majutsushi/tagbar'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'JazzCore/ctrlp-cmatcher', {'do': './install.sh'}
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'cespare/vim-toml', {'for' : 'toml'}
 Plug 'elzr/vim-json', {'for' : 'json'}
-"Plug 'suan/vim-instant-markdown', {'for' : 'markdown'}
-
+Plug 'rust-lang/rust.vim'
 Plug 'xolox/vim-misc'
 Plug 'crosbymichael/vim-cfmt'
 Plug 'xolox/vim-easytags'
 "Plug 'edsono/vim-matchit'
-"Plug 'Lokaltog/vim-easymotion' vim-sneak
 Plug 'nathanaelkane/vim-indent-guides'
-
 Plug 'moll/vim-bbye'
 
 call plug#end()
