@@ -41,15 +41,12 @@ backup_irssi() {
 docker-compile() {
 	sudo systemctl stop docker
 	docker-compile-deps
-	AUTO_GOPATH=1 BUILDFLAGS="-race" DOCKER_BUILDTAGS="seccomp experimental selinux journald exclude_graphdriver_btrfs exclude_graphdriver_zfs exclude_graphdriver_aufs exclude_graphdriver_devicemapper" ./hack/make.sh dynbinary
+	AUTO_GOPATH=1 BUILDFLAGS="-race" DOCKER_BUILDTAGS="seccomp experimental selinux journald exclude_graphdriver_btrfs exclude_graphdriver_zfs exclude_graphdriver_aufs" ./hack/make.sh dynbinary
 	if [ -e "bundles/latest/dynbinary/docker" ]; then
-		sudo cp bundles/latest/dynbinary/docker /usr/bin/docker
+		sudo cp bundles/latest/dynbinary/docker /usr/bin/docker-current
 	else
-		sudo cp bundles/latest/dynbinary-client/docker /usr/bin/docker
-		sudo cp bundles/latest/dynbinary-daemon/dockerd /usr/bin/dockerd
-		if [ -e "bundles/latest/dynbinary-daemon/docker-proxy" ]; then
-			sudo cp bundles/latest/dynbinary-daemon/docker-proxy /usr/bin/docker-proxy
-		fi
+		sudo cp bundles/latest/dynbinary-client/docker /usr/bin/docker-current
+		sudo cp bundles/latest/dynbinary-daemon/dockerd /usr/bin/dockerd-current
 	fi
 	echo "now call sudo systemctl restart docker"
 }
@@ -69,7 +66,29 @@ docker-compile-deps() {
 		RUNC_COMMIT=$(grep RUNC_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
 		CONTAINERD_COMMIT=$(grep CONTAINERD_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
 		GRIMES_COMMIT=$(grep GRIMES_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
+		LIBNETWORK_COMMIT=$(grep LIBNETWORK_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
+	else
+		dockerfile_path="${GOPATH}/src/github.com/docker/docker/Dockerfile"
+		RUNC_COMMIT=$(grep RUNC_COMMIT $dockerfile_path | head -n 1 | cut -d" " -f 3)
+		CONTAINERD_COMMIT=$(grep CONTAINERD_COMMIT $dockerfile_path | head -n 1 | cut -d" " -f 3)
+	fi
 
+	current_runc_commit=$(command -v docker-runc >/dev/null 2>&1 && docker-runc --version | grep commit | cut -d" " -f 2)
+	current_containerd_commit=$(command -v docker-containerd >/dev/null 2>&1 && docker-containerd --version | cut -d" " -f 5)
+
+	if [ -n "${LIBNETWORK_COMMIT}" ]; then
+		echo "Building docker-proxy"
+		export GOPATH="$(mktemp -d)"
+		git clone git://github.com/docker/libnetwork.git "$GOPATH/src/github.com/docker/libnetwork"
+		pushd "$GOPATH/src/github.com/docker/libnetwork"
+		git checkout -q "$LIBNETWORK_COMMIT"
+		go build -ldflags="-linkmode=external" -o docker-proxy github.com/docker/libnetwork/cmd/proxy
+		sudo cp docker-proxy /usr/bin/docker-proxy
+		popd
+		rm -rf ${GOPATH}
+	fi
+
+	if [ -n "${GRIMES_COMMIT}" ]; then
 		echo "Building grimes"
 		export GOPATH="$(mktemp -d)"
 		git clone git://github.com/crosbymichael/grimes.git "$GOPATH/src/github.com/crosbymichael/grimes"
@@ -79,15 +98,7 @@ docker-compile-deps() {
 		sudo cp init /usr/local/bin/init
 		popd
 		rm -rf ${GOPATH}
-	else
-		dockerfile_path="${GOPATH}/src/github.com/docker/docker/Dockerfile"
-		RUNC_COMMIT=$(grep RUNC_COMMIT $dockerfile_path | head -n 1 | cut -d" " -f 3)
-		CONTAINERD_COMMIT=$(grep CONTAINERD_COMMIT $dockerfile_path | head -n 1 | cut -d" " -f 3)
-
 	fi
-
-	current_runc_commit=$(command -v docker-runc >/dev/null 2>&1 && docker-runc --version | grep commit | cut -d" " -f 2)
-	current_containerd_commit=$(command -v docker-containerd >/dev/null 2>&1 && docker-containerd --version | cut -d" " -f 5)
 
 	if [ -n "${RUNC_COMMIT}" ]; then
 		if [ "${current_runc_commit}" != "${RUNC_COMMIT}" ]; then
