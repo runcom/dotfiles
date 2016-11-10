@@ -65,7 +65,7 @@ docker-compile-deps() {
 	if [ -e "$dockerfile_path" ]; then
 		RUNC_COMMIT=$(grep RUNC_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
 		CONTAINERD_COMMIT=$(grep CONTAINERD_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
-		GRIMES_COMMIT=$(grep GRIMES_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
+		TINI_COMMIT=$(grep TINI_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
 		LIBNETWORK_COMMIT=$(grep LIBNETWORK_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
 	else
 		dockerfile_path="${GOPATH}/src/github.com/docker/docker/Dockerfile"
@@ -88,12 +88,12 @@ docker-compile-deps() {
 		rm -rf ${GOPATH}
 	fi
 
-	if [ -n "${GRIMES_COMMIT}" ]; then
-		echo "Building grimes"
+	if [ -n "${TINI_COMMIT}" ]; then
+		echo "Building tini"
 		export GOPATH="$(mktemp -d)"
-		git clone git://github.com/crosbymichael/grimes.git "$GOPATH/src/github.com/crosbymichael/grimes"
-		pushd "$GOPATH/src/github.com/crosbymichael/grimes"
-		git checkout -q "$GRIMES_COMMIT"
+		git clone git://github.com/krallin/tini.git "$GOPATH/src/github.com/krallin/tini"
+		pushd "$GOPATH/src/github.com/krallin/tini"
+		git checkout -q "$TINI_COMMIT"
 		make
 		sudo cp init /usr/local/bin/init
 		popd
