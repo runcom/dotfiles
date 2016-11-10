@@ -94,8 +94,9 @@ docker-compile-deps() {
 		git clone git://github.com/krallin/tini.git "$GOPATH/src/github.com/krallin/tini"
 		pushd "$GOPATH/src/github.com/krallin/tini"
 		git checkout -q "$TINI_COMMIT"
-		make
-		sudo cp init /usr/local/bin/init
+		cmake -DMINIMAL=ON .
+		make tini-static
+		sudo cp tini-static /usr/local/bin/docker-init
 		popd
 		rm -rf ${GOPATH}
 	fi
