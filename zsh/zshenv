@@ -1,5 +1,5 @@
-export PATH=$PATH:/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:$HOME/bin:$HOME/.cargo/bin
+export PATH=$PATH:/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:$HOME/bin:$HOME/.cargo/bin:$HOME/go/bin
 # golang ftw
-export PATH=$PATH:/usr/local/go/bin:/home/amurdaca/src/github.com/openshift/origin/_output/local/bin/linux/amd64
-export GOPATH=$HOME
-export CDPATH=/home/amurdaca/src/github.com/
+export PATH=$PATH:/usr/local/go/bin:/home/amurdaca/go/src/github.com/openshift/origin/_output/local/bin/linux/amd64
+export GOPATH=$HOME/go
+export CDPATH=/home/amurdaca/go/src/github.com/
