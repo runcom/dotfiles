@@ -104,7 +104,7 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 " try with oh-my-zsh envvars.zsh
 " TODO: CTRLP not finding files at all????
 
-let $GOPATH=$HOME/go
+let $GOPATH="$HOME/go"
 let g:rustfmt_autosave = 1
 let g:rustfmt_fail_silently = 1
 nnoremap gr :YcmCompleter GoTo<CR>
