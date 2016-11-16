@@ -1,5 +1,4 @@
 #alias git-all="git add . && git commit -am \"$(wget -q whatthecommit.com -O - | sed -n '/<p>/,/<\/p>/p' | sed -e '1s/.*<p>//' -e '$s/<\/p>.*//')\" && git push --all"
-alias git=hub
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
