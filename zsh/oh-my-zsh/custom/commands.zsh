@@ -41,7 +41,9 @@ backup_irssi() {
 docker-compile() {
 	sudo systemctl stop docker
 	docker-compile-deps
-	AUTO_GOPATH=1 BUILDFLAGS="-race" DOCKER_BUILDTAGS="seccomp experimental selinux journald exclude_graphdriver_btrfs exclude_graphdriver_zfs exclude_graphdriver_aufs" ./hack/make.sh dynbinary
+	# disable experimental
+	#AUTO_GOPATH=1 BUILDFLAGS="-race" DOCKER_BUILDTAGS="seccomp experimental selinux journald exclude_graphdriver_btrfs exclude_graphdriver_zfs exclude_graphdriver_aufs" ./hack/make.sh dynbinary
+	AUTO_GOPATH=1 BUILDFLAGS="-race" DOCKER_BUILDTAGS="seccomp selinux journald exclude_graphdriver_btrfs exclude_graphdriver_zfs exclude_graphdriver_aufs" ./hack/make.sh dynbinary
 	if [ -e "bundles/latest/dynbinary/docker" ]; then
 		sudo cp bundles/latest/dynbinary/docker /usr/bin/docker-current
 	else
@@ -61,7 +63,10 @@ docker-compile-deps() {
 
 	old_gopath="${GOPATH}"
 
-	dockerfile_path="${GOPATH}/src/github.com/docker/docker/hack/dockerfile/install-binaries.sh"
+	RUNC_COMMIT=""
+	CONTAINERD_COMMIT=""
+
+	dockerfile_path="${GOPATH}/src/github.com/docker/docker/hack/dockerfile/binaries-commits"
 	if [ -e "$dockerfile_path" ]; then
 		RUNC_COMMIT=$(grep RUNC_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
 		CONTAINERD_COMMIT=$(grep CONTAINERD_COMMIT $dockerfile_path | head -n 1 | cut -d"=" -f 2)
