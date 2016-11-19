@@ -80,6 +80,7 @@ docker-compile-deps() {
 
 	current_runc_commit=$(command -v docker-runc >/dev/null 2>&1 && docker-runc --version | grep commit | cut -d" " -f 2)
 	current_containerd_commit=$(command -v docker-containerd >/dev/null 2>&1 && docker-containerd --version | cut -d" " -f 5)
+	current_tini_commit=$(command -v docker-init >/dev/null 2>&1 && docker-init --version | cut -d"-" -f 2 | cut -d"." -f 2)
 
 	if [ -n "${LIBNETWORK_COMMIT}" ]; then
 		echo "Building docker-proxy"
@@ -94,20 +95,24 @@ docker-compile-deps() {
 	fi
 
 	if [ -n "${TINI_COMMIT}" ]; then
-		echo "Building tini"
-		export GOPATH="$(mktemp -d)"
-		git clone git://github.com/krallin/tini.git "$GOPATH/src/github.com/krallin/tini"
-		pushd "$GOPATH/src/github.com/krallin/tini"
-		git checkout -q "$TINI_COMMIT"
-		cmake -DMINIMAL=ON .
-		make tini-static
-		sudo cp tini-static /usr/local/bin/docker-init
-		popd
-		rm -rf ${GOPATH}
+		if [ "${current_tini_commit}" != "${TINI_COMMIT:0:7}" ]; then
+			echo "Building tini"
+			export GOPATH="$(mktemp -d)"
+			git clone git://github.com/krallin/tini.git "$GOPATH/src/github.com/krallin/tini"
+			pushd "$GOPATH/src/github.com/krallin/tini"
+			git checkout -q "$TINI_COMMIT"
+			cmake -DMINIMAL=ON .
+			make tini-static
+			sudo cp tini-static /usr/local/bin/docker-init
+			popd
+			rm -rf ${GOPATH}
+		else
+				echo "skipping tini compile, same commit"
+		fi
 	fi
 
 	if [ -n "${RUNC_COMMIT}" ]; then
-		if [ "${current_runc_commit}" != "${RUNC_COMMIT}" ]; then
+		if [ "${current_runc_commit:0:7}" != "${RUNC_COMMIT:0:7}" ]; then
 			echo "Building runc"
 			export GOPATH="$(mktemp -d)"
 			git clone git://github.com/opencontainers/runc.git "$GOPATH/src/github.com/opencontainers/runc"
@@ -123,7 +128,7 @@ docker-compile-deps() {
 	fi
 
 	if [ -n "${CONTAINERD_COMMIT}" ]; then
-		if [ "${current_containerd_commit}" != "${CONTAINERD_COMMIT}" ]; then
+		if [ "${current_containerd_commit:0:7}" != "${CONTAINERD_COMMIT:0:7}" ]; then
 			echo "Building containerd"
 			export GOPATH="$(mktemp -d)"
 			git clone git://github.com/docker/containerd.git "$GOPATH/src/github.com/docker/containerd"
