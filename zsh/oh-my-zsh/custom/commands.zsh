@@ -40,6 +40,7 @@ backup_irssi() {
 
 docker-compile() {
 	sudo systemctl stop docker
+	sudo systemctl stop docker-containerd
 	docker-compile-deps
 	# disable experimental
 	#AUTO_GOPATH=1 BUILDFLAGS="-race" DOCKER_BUILDTAGS="seccomp experimental selinux journald exclude_graphdriver_btrfs exclude_graphdriver_zfs exclude_graphdriver_aufs" ./hack/make.sh dynbinary
@@ -78,9 +79,9 @@ docker-compile-deps() {
 		CONTAINERD_COMMIT=$(grep CONTAINERD_COMMIT $dockerfile_path | head -n 1 | cut -d" " -f 3)
 	fi
 
-	current_runc_commit=$(command -v docker-runc >/dev/null 2>&1 && docker-runc --version | grep commit | cut -d" " -f 2)
-	current_containerd_commit=$(command -v docker-containerd >/dev/null 2>&1 && docker-containerd --version | cut -d" " -f 5)
-	current_tini_commit=$(command -v docker-init >/dev/null 2>&1 && docker-init --version | cut -d"-" -f 2 | cut -d"." -f 2)
+	current_runc_commit=$(command -v /usr/libexec/docker/docker-runc-current >/dev/null 2>&1 && /usr/libexec/docker/docker-runc-current --version | grep commit | cut -d" " -f 2)
+	current_containerd_commit=$(command -v /usr/libexec/docker/docker-containerd-current >/dev/null 2>&1 && /usr/libexec/docker/docker-containerd-current --version | cut -d" " -f 5)
+	current_tini_commit=$(command -v /usr/libexec/docker/docker-init-current >/dev/null 2>&1 && /usr/libexec/docker/docker-init-current --version | cut -d"-" -f 2 | cut -d"." -f 2)
 
 	if [ -n "${LIBNETWORK_COMMIT}" ]; then
 		echo "Building docker-proxy"
@@ -89,7 +90,8 @@ docker-compile-deps() {
 		pushd "$GOPATH/src/github.com/docker/libnetwork"
 		git checkout -q "$LIBNETWORK_COMMIT"
 		go build -ldflags="-linkmode=external" -o docker-proxy github.com/docker/libnetwork/cmd/proxy
-		sudo cp docker-proxy /usr/bin/docker-proxy
+		sudo cp docker-proxy /usr/libexec/docker/docker-proxy-current
+		#sudo cp docker-proxy /usr/bin/docker-proxy
 		popd
 		rm -rf ${GOPATH}
 	fi
@@ -103,7 +105,8 @@ docker-compile-deps() {
 			git checkout -q "$TINI_COMMIT"
 			cmake -DMINIMAL=ON .
 			make tini-static
-			sudo cp tini-static /usr/local/bin/docker-init
+			#sudo cp tini-static /usr/local/bin/docker-init
+			sudo cp tini-static /usr/libexec/docker/docker-init-current
 			popd
 			rm -rf ${GOPATH}
 		else
@@ -119,7 +122,8 @@ docker-compile-deps() {
 			pushd "$GOPATH/src/github.com/opencontainers/runc"
 			git checkout -q "$RUNC_COMMIT"
 			make BUILDTAGS="seccomp selinux"
-			sudo cp runc /usr/local/bin/docker-runc
+			#sudo cp runc /usr/local/bin/docker-runc
+			sudo cp runc /usr/libexec/docker/docker-runc-current
 			popd
 			rm -rf ${GOPATH}
 		else
@@ -135,11 +139,11 @@ docker-compile-deps() {
 			pushd "$GOPATH/src/github.com/docker/containerd"
 			git checkout -q "$CONTAINERD_COMMIT"
 			make
-			sudo cp bin/containerd /usr/local/bin/docker-containerd
+			#sudo cp bin/containerd /usr/local/bin/docker-containerd
 			sudo cp bin/containerd /usr/libexec/docker/docker-containerd-current
-			sudo cp bin/containerd-shim /usr/local/bin/docker-containerd-shim
+			#sudo cp bin/containerd-shim /usr/local/bin/docker-containerd-shim
 			sudo cp bin/containerd-shim /usr/libexec/docker/docker-containerd-shim-current
-			sudo cp bin/ctr /usr/local/bin/docker-containerd-ctr
+			#sudo cp bin/ctr /usr/local/bin/docker-containerd-ctr
 			sudo cp bin/ctr /usr/libexec/docker/docker-containerd-ctr-current
 			popd
 			rm -rf ${GOPATH}
