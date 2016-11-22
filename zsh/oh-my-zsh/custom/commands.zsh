@@ -136,8 +136,11 @@ docker-compile-deps() {
 			git checkout -q "$CONTAINERD_COMMIT"
 			make
 			sudo cp bin/containerd /usr/local/bin/docker-containerd
+			sudo cp bin/containerd /usr/libexec/docker/docker-containerd-current
 			sudo cp bin/containerd-shim /usr/local/bin/docker-containerd-shim
+			sudo cp bin/containerd-shim /usr/libexec/docker/docker-containerd-shim-current
 			sudo cp bin/ctr /usr/local/bin/docker-containerd-ctr
+			sudo cp bin/ctr /usr/libexec/docker/docker-containerd-ctr-current
 			popd
 			rm -rf ${GOPATH}
 		else
