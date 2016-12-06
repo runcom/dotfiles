@@ -3,3 +3,6 @@ export PATH=$PATH:/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/s
 export PATH=$PATH:/usr/local/go/bin:/home/amurdaca/go/src/github.com/openshift/origin/_output/local/bin/linux/amd64
 export GOPATH=$HOME/go
 export CDPATH=/home/amurdaca/go/src/github.com/
+export WORKON_HOME=$HOME/.venvs
+mkdir -p $WORKON_HOME
+source /usr/bin/virtualenvwrapper.sh
