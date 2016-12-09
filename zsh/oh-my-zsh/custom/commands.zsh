@@ -118,7 +118,7 @@ docker-compile-deps() {
 		if [ "${current_runc_commit:0:7}" != "${RUNC_COMMIT:0:7}" ]; then
 			echo "Building runc"
 			export GOPATH="$(mktemp -d)"
-			git clone git://github.com/opencontainers/runc.git "$GOPATH/src/github.com/opencontainers/runc"
+			git clone git://github.com/docker/runc.git "$GOPATH/src/github.com/opencontainers/runc"
 			pushd "$GOPATH/src/github.com/opencontainers/runc"
 			git checkout -q "$RUNC_COMMIT"
 			make BUILDTAGS="seccomp selinux"
