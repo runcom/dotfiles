@@ -50,11 +50,15 @@ if [[ "$1" = "update" ]]; then
 	if [[ ! -z "${3// }" ]]; then
 		sed -i "/%global docker_branch /c\%global docker_branch docker-$3" $PROG.spec
 		sed -i "/^Version: /c\Version: $3" $PROG.spec
+	fi
+	if [[ ! -z "${4// }" ]]; then
+		sed -i "/^Release: /c\Release: $4.git%{shortcommit0}%{?dist}" $PROG.spec
+	else
 		sed -i "/^Release: /c\Release: 1.git%{shortcommit0}%{?dist}" $PROG.spec
 	fi
 fi
 if [[ "$1" = "all" ]]; then
-	docker-changelog update $1 $2
+	docker-changelog update $2 $3 $4
 	docker-changelog bumpspec
 	docker-changelog commit
 	spectool -g $PROG.spec
