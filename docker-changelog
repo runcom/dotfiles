@@ -1,0 +1,67 @@
+#!/bin/sh
+
+PROG=${PROG:-docker}
+
+if [ ! -f $PROG.spec ]; then
+	echo "no $PROG.spec found"
+	exit 1
+fi
+
+BRANCH=$(cat $PROG.spec | grep "Version: " | sed -e "s/Version: //" | cut -f1,2 -d.)
+VERSION=$(cat $PROG.spec | grep "Version:" | sed -e "s/Version: //")
+EPOCH=$(cat $PROG.spec | grep "Epoch:" | sed -e "s/Epoch: //")
+RELEASE=$(cat $PROG.spec | grep "Release:" | sed -e "s/Release: //" | sed -e "s/\.git.*//")
+docker=$(cat $PROG.spec | grep "%global commit0 " | sed -e "s/%global commit0 //")
+dockerselinux=$(cat $PROG.spec | grep "%global commit2 " | sed -e "s/%global commit2 //" | head -1)
+dss=$(cat $PROG.spec | grep "%global commit1 " | sed -e "s/%global commit1 //")
+dockernovolumeplugin=$(cat $PROG.spec | grep "%global commit4 " | sed -e "s/%global commit4 //")
+docker110migrator=$(cat $PROG.spec | grep "%global commit5 " | sed -e "s/%global commit5 //")
+dockerrunc=$(cat $PROG.spec | grep "%global commit6 " | sed -e "s/%global commit6 //")
+dockercontainerd=$(cat $PROG.spec | grep "%global commit7 " | sed -e "s/%global commit7 //")
+dockerutils=$(cat $PROG.spec | grep "%global commit3 " | sed -e "s/%global commit3 //")
+
+NVR="NVR: $PROG-$EPOCH:$VERSION-$RELEASE.git${docker:0:7}"
+## TODO(runcom): print commit line only if the var isn't empty!!!
+LOGS="- built docker @projectatomic/docker-$BRANCH commit ${docker:0:7}
+- built docker-selinux commit ${dockerselinux:0:7}
+- built d-s-s commit ${dss:0:7}
+- built docker-novolume-plugin commit ${dockernovolumeplugin:0:7}
+- built docker-runc @projectatomic/runc-$BRANCH commit ${dockerrunc:0:7}
+- built docker-utils commit ${dockerutils:0:7}
+- built docker-containerd commit ${dockercontainerd:0:7}
+- built docker-v1.10-migrator commit ${docker110migrator:0:7}"
+
+if [[ "$1" != "all" && "$1" != "update" && "$1" != "nvr" && "$1" != "logs" && "$1" != "bumpspec" && "$1" != "commit" ]]; then
+	echo "use [all|nvr|logs|bumpspec|commit|update]"
+	exit 1
+fi
+if [[ "$1" = "nvr" ]]; then
+	echo "$NVR"
+fi
+if [[ "$1" = "logs" ]]; then
+	echo "$LOGS"
+fi
+if [[ "$1" = "update" ]]; then
+	if [[ -z "${2// }" ]]; then
+		echo "use: update <commit> <version>"
+		exit 1
+	fi
+	sed -i "/%global commit0 /c\%global commit0 $2" $PROG.spec
+	if [[ ! -z "${3// }" ]]; then
+		sed -i "/%global docker_branch /c\%global docker_branch docker-$3" $PROG.spec
+		sed -i "/^Version: /c\Version: $3" $PROG.spec
+		sed -i "/^Release: /c\Release: 1.git%{shortcommit0}%{?dist}" $PROG.spec
+	fi
+fi
+if [[ "$1" = "all" ]]; then
+	docker-changelog update $1 $2
+	docker-changelog bumpspec
+	docker-changelog commit
+	spectool -g $PROG.spec
+fi
+if [[ "$1" = "bumpspec" ]]; then
+	rpmdev-bumpspec -c "$LOGS" $PROG.spec
+fi
+if [[ "$1" = "commit" ]]; then
+	git add $PROG.spec && git cs -a -m "$NVR" -m "$LOGS"
+fi
