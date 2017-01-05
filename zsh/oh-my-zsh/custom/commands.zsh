@@ -41,10 +41,10 @@ backup_irssi() {
 docker-compile() {
 	sudo systemctl stop docker
 	sudo systemctl stop docker-containerd
-	docker-compile-deps
+	docker-compile-deps $1
 	# disable experimental
 	#AUTO_GOPATH=1 BUILDFLAGS="-race" DOCKER_BUILDTAGS="seccomp experimental selinux journald exclude_graphdriver_btrfs exclude_graphdriver_zfs exclude_graphdriver_aufs" ./hack/make.sh dynbinary
-	AUTO_GOPATH=1 BUILDFLAGS="-race" DOCKER_BUILDTAGS="seccomp selinux journald exclude_graphdriver_btrfs exclude_graphdriver_zfs exclude_graphdriver_aufs" ./hack/make.sh dynbinary
+	AUTO_GOPATH=1 DOCKER_BUILDTAGS="seccomp selinux journald exclude_graphdriver_btrfs exclude_graphdriver_zfs exclude_graphdriver_aufs" ./hack/make.sh dynbinary
 	if [ -e "bundles/latest/dynbinary/docker" ]; then
 		sudo cp bundles/latest/dynbinary/docker /usr/bin/docker-current
 	else
@@ -61,6 +61,19 @@ rkt-compile() {
 docker-compile-deps() {
 	#set -e
 	set -x
+
+	DEPS=""
+	case $1 in
+		"")
+			;;
+		--no-deps)
+			DEPS="no"
+			;;
+		*)
+			echo "os not supported"
+			exit
+			;;
+	esac
 
 	old_gopath="${GOPATH}"
 
@@ -83,7 +96,7 @@ docker-compile-deps() {
 	current_containerd_commit=$(command -v /usr/libexec/docker/docker-containerd-current >/dev/null 2>&1 && /usr/libexec/docker/docker-containerd-current --version | cut -d" " -f 5)
 	current_tini_commit=$(command -v /usr/libexec/docker/docker-init-current >/dev/null 2>&1 && /usr/libexec/docker/docker-init-current --version | cut -d"-" -f 2 | cut -d"." -f 2)
 
-	if [ -n "${LIBNETWORK_COMMIT}" ]; then
+	if [ -n "${LIBNETWORK_COMMIT}" -a -z "${DEPS}" ]; then
 		echo "Building docker-proxy"
 		export GOPATH="$(mktemp -d)"
 		git clone git://github.com/docker/libnetwork.git "$GOPATH/src/github.com/docker/libnetwork"
@@ -96,7 +109,7 @@ docker-compile-deps() {
 		rm -rf ${GOPATH}
 	fi
 
-	if [ -n "${TINI_COMMIT}" ]; then
+	if [ -n "${TINI_COMMIT}" -a -z "${DEPS}" ]; then
 		if [ "${current_tini_commit}" != "${TINI_COMMIT:0:7}" ]; then
 			echo "Building tini"
 			export GOPATH="$(mktemp -d)"
@@ -114,7 +127,7 @@ docker-compile-deps() {
 		fi
 	fi
 
-	if [ -n "${RUNC_COMMIT}" ]; then
+	if [ -n "${RUNC_COMMIT}" -a -z "${DEPS}" ]; then
 		if [ "${current_runc_commit:0:7}" != "${RUNC_COMMIT:0:7}" ]; then
 			echo "Building runc"
 			export GOPATH="$(mktemp -d)"
@@ -131,7 +144,7 @@ docker-compile-deps() {
 		fi
 	fi
 
-	if [ -n "${CONTAINERD_COMMIT}" ]; then
+	if [ -n "${CONTAINERD_COMMIT}" -a -z "${DEPS}" ]; then
 		if [ "${current_containerd_commit:0:7}" != "${CONTAINERD_COMMIT:0:7}" ]; then
 			echo "Building containerd"
 			export GOPATH="$(mktemp -d)"
