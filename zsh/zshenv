@@ -5,7 +5,4 @@ export GOPATH=$HOME/go
 export CDPATH=/home/amurdaca/go/src/github.com/
 export WORKON_HOME=$HOME/.venvs
 mkdir -p $WORKON_HOME
-mkdir -p /tmp/krbcache
-KRB5CCNAME=DIR:/tmp/krbcache
-export KRB5CCNAME
 source /usr/bin/virtualenvwrapper.sh

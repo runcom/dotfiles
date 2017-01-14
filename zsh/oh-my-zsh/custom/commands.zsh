@@ -6,6 +6,12 @@ vmip() {
 	dirname $(sudo virsh domifaddr $1 --full | tail -n +3 | awk '{ print $4  }')
 }
 
+krb-multiple() {
+	mkdir -p /tmp/krbcache
+	KRB5CCNAME=DIR:/tmp/krbcache
+	export KRB5CCNAME
+}
+
 custom-golang() {
 	export GOROOT=/usr/local/go
 	export PATH=$GOROOT/bin:$PATH
