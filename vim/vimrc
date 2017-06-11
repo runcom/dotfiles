@@ -26,11 +26,15 @@ Plug 'cespare/vim-toml', {'for' : 'toml'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'rust-lang/rust.vim'
 Plug 'xolox/vim-misc'
-Plug 'crosbymichael/vim-cfmt'
+"Plug 'crosbymichael/vim-cfmt'
 Plug 'xolox/vim-easytags'
 "Plug 'edsono/vim-matchit'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'moll/vim-bbye'
+
+" vim-plug
+"Plug 'Shougo/deoplete.nvim'
+"Plug 'zchee/deoplete-go', { 'do': 'make'}
 
 call plug#end()
 
@@ -40,8 +44,8 @@ filetype off                  " required
 
 filetype plugin indent on    " required
 
-autocmd BufWritePre *.c,*.h Cfmt
-let g:cfmt_style = '-linux'
+"autocmd BufWritePre *.c,*.h Cfmt
+"let g:cfmt_style = '-linux'
 
 "
 " Settings
@@ -77,8 +81,8 @@ set hlsearch                    " Highlight found searches
 set ignorecase                  " Search case insensitive...
 set smartcase                   " ... but not when search pattern contains upper case characters
 set ttyfast
-set ttymouse=xterm2
-set ttyscroll=3
+"set ttymouse=xterm2
+"set ttyscroll=3
 set lazyredraw                  " Wait to redraw "
 
 " speed up syntax highlighting
@@ -99,18 +103,23 @@ set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go']  }
+let g:go_gocode_autobuild = 0
+
+
 " gvim env vars works only with ~/.zshenv and not all are set, see $GOPATH for
 " example
 " try with oh-my-zsh envvars.zsh
 " TODO: CTRLP not finding files at all????
 
-"let $GOPATH="$HOME/go"
+"let $GOPATH = $HOME
 let g:rustfmt_autosave = 1
 let g:rustfmt_fail_silently = 1
 nnoremap gr :YcmCompleter GoTo<CR>
-" FIXME after https://bugzilla.redhat.com/show_bug.cgi?id=1385262
-let g:rustc_version = system("rustc --version | sed -e 's/rustc //g' | tr -d '\n'")
-let g:ycm_rust_src_path = "/usr/src/debug/rustc-" . g:rustc_version . "/src"
+" curl https://sh.rustup.rs -sSf | sh
+" rustup component add rust-src
+let g:ycm_rust_src_path = $HOME.'/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src'
 
 if has("gui_running")
     "if has("gui_gtk2")
@@ -647,6 +656,7 @@ let g:vim_json_syntax_conceal = -1
 " ==================== YouCompleteMe ultisnips supertab ====================
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_min_num_of_chars_for_completion = 1
+"
 "let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 "let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 "let g:SuperTabDefaultCompletionType = '<C-n>'
