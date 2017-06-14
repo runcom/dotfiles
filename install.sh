@@ -120,6 +120,8 @@ sudo systemctl enable docker
 #sudo cp $DOTFILES_ROOT/docker.socket /etc/systemd/system/docker.socket
 sudo systemctl start docker
 
+curl https://sh.rustup.rs -sSf | sh
+
 # enable updates-testing
 #sudo dnf config-manager --set-enabled updates-testing
 
