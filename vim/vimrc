@@ -119,7 +119,7 @@ let g:rustfmt_fail_silently = 1
 nnoremap gr :YcmCompleter GoTo<CR>
 " curl https://sh.rustup.rs -sSf | sh
 " rustup component add rust-src
-let g:ycm_rust_src_path = $HOME.'/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src'
+let g:ycm_rust_src_path = substitute(system('rustc --print sysroot'), '\n\+$', '', '') . '/lib/rustlib/src/rust/src'
 
 if has("gui_running")
     "if has("gui_gtk2")
