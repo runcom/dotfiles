@@ -52,6 +52,8 @@ DOTFILES_ROOT=`pwd`
 sudo dnf -y update
 sudo dnf install mosh git-email terminator zsh cmake htop python-devel ctags vim-enhanced jq the_silver_searcher vim-X11 ruby ruby-devel gnome-tweak-tool gnome-shell-extension-pomodoro graphviz perl-Text-CharWidth krb5-workstation google-chrome-stable golang libvirt-sandbox mercurial golang-godoc golang-github-cpuguy83-go-md2man godep recode ostree python-ldap pastebinit 'dnf-command(system-upgrade)' keepassx terminus-fonts pidgin overpass-fonts rust cargo
 
+sudo systemctl enable --now fstrim.timer
+
 sudo pip install --upgrade pip
 sudo pip install virtualenvwrapper
 
