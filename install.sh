@@ -50,12 +50,12 @@ DOTFILES_ROOT=`pwd`
 #EOF'
 #sudo dnf clean all
 sudo dnf -y update
-sudo dnf install mosh git-email terminator zsh cmake htop python-devel ctags vim-enhanced jq the_silver_searcher vim-X11 ruby ruby-devel gnome-tweak-tool gnome-shell-extension-pomodoro graphviz perl-Text-CharWidth krb5-workstation google-chrome-stable golang libvirt-sandbox mercurial golang-godoc golang-github-cpuguy83-go-md2man godep recode ostree python-ldap pastebinit 'dnf-command(system-upgrade)' keepassx terminus-fonts pidgin overpass-fonts rust cargo
+sudo dnf install mosh git-email terminator zsh cmake htop python-devel ctags vim-enhanced jq the_silver_searcher vim-X11 ruby ruby-devel gnome-tweak-tool gnome-shell-extension-pomodoro graphviz perl-Text-CharWidth krb5-workstation google-chrome-stable golang libvirt-sandbox mercurial recode python-ldap pastebinit 'dnf-command(system-upgrade)' keepassx terminus-fonts pidgin overpass-fonts tokei unrar
 
 sudo systemctl enable --now fstrim.timer
 
-sudo pip install --upgrade pip
-sudo pip install virtualenvwrapper
+#sudo pip install --upgrade pip
+#sudo pip install virtualenvwrapper
 
 # XXX(runcom): terminus-fonts in terminator! set to 15 size!!!!!!!!!
 echo "set size=15 in terminator for terminus-fonts"
@@ -65,29 +65,29 @@ echo "set size=15 in terminator for terminus-fonts"
 #sudo dnf install feh i3 i3lock i3status i3-ipc arandr network-manager-applet
 #sudo dnf install rxvt-unicode-256color
 
-sudo dnf install mutt python-inotify goobook
+#sudo dnf install mutt python-inotify goobook
 #install offline imap
-export tmp="$(mktemp -d)"
-git clone git://github.com/OfflineIMAP/offlineimap.git $tmp
-pushd $tmp
-make build
-sudo python setup.py install
-popd
-rm -rf $tmp
-mkdir $HOME/.mutt
-mkdir -p $HOME/.config/systemd/user
-cp $DOTFILES_ROOT/mutt/_gpg.rc $HOME/.gpg.rc
-cp $DOTFILES_ROOT/mutt/_offlineimaprc $HOME/.offlineimaprc
-cp $DOTFILES_ROOT/mutt/_muttrc $HOME/.muttrc
-cp $DOTFILES_ROOT/mutt/mutt-colors-solarized-dark-16.muttrc $HOME/.mutt/mutt-colors-solarized-dark-16.muttrc
-cp $DOTFILES_ROOT/mutt/mutt-patch-highlighting.muttrc $HOME/.mutt/mutt-patch-highlighting.muttrc
-cp $DOTFILES_ROOT/mutt/signature $HOME/.mutt/signature
-cp $DOTFILES_ROOT/mutt/mail.target $HOME/.config/systemd/user
-cp $DOTFILES_ROOT/mutt/offlineimap@.service $HOME/.config/systemd/user
-cp $DOTFILES_ROOT/mutt/offlineimap@.timer $HOME/.config/systemd/user
-sudo cp $DOTFILES_ROOT/mutt/email_notifier /usr/local/bin/
-cp $DOTFILES_ROOT/mutt/emailnotifier.service $HOME/.config/systemd/user
-cp $DOTFILES_ROOT/mutt/_goobookrc $HOME/.goobookrc
+port tmp="$(mktemp -d)"
+#git clone git://github.com/OfflineIMAP/offlineimap.git $tmp
+#pushd $tmp
+#make build
+#sudo python setup.py install
+#popd
+#rm -rf $tmp
+#mkdir $HOME/.mutt
+#mkdir -p $HOME/.config/systemd/user
+#cp $DOTFILES_ROOT/mutt/_gpg.rc $HOME/.gpg.rc
+#cp $DOTFILES_ROOT/mutt/_offlineimaprc $HOME/.offlineimaprc
+#cp $DOTFILES_ROOT/mutt/_muttrc $HOME/.muttrc
+#cp $DOTFILES_ROOT/mutt/mutt-colors-solarized-dark-16.muttrc $HOME/.mutt/mutt-colors-solarized-dark-16.muttrc
+#cp $DOTFILES_ROOT/mutt/mutt-patch-highlighting.muttrc $HOME/.mutt/mutt-patch-highlighting.muttrc
+#cp $DOTFILES_ROOT/mutt/signature $HOME/.mutt/signature
+#cp $DOTFILES_ROOT/mutt/mail.target $HOME/.config/systemd/user
+#cp $DOTFILES_ROOT/mutt/offlineimap@.service $HOME/.config/systemd/user
+#cp $DOTFILES_ROOT/mutt/offlineimap@.timer $HOME/.config/systemd/user
+#sudo cp $DOTFILES_ROOT/mutt/email_notifier /usr/local/bin/
+#cp $DOTFILES_ROOT/mutt/emailnotifier.service $HOME/.config/systemd/user
+#cp $DOTFILES_ROOT/mutt/_goobookrc $HOME/.goobookrc
 
 # manually do this
 #sudo -i -u amurdaca systemctl --user enable mail.target
@@ -97,11 +97,11 @@ cp $DOTFILES_ROOT/mutt/_goobookrc $HOME/.goobookrc
 #sudo -i -u amurdaca systemctl --user start emailnotifier.service
 
 # needed to compile docker with hack/make.sh on host
-sudo dnf install device-mapper-devel audit-libs-devel glibc-static systemd-devel libseccomp-static
+#sudo dnf install device-mapper-devel audit-libs-devel glibc-static systemd-devel libseccomp-static
 # needed to compile docker with rpmbuild
-sudo dnf install btrfs-progs-devel selinux-policy-devel sqlite-devel
+#sudo dnf install btrfs-progs-devel selinux-policy-devel sqlite-devel
 # needed to compile rkt
-sudo dnf install squashfs-tools libacl-devel trousers-devel
+#sudo dnf install squashfs-tools libacl-devel trousers-devel
 # needed for --size 10G in virt-builder
 sudo dnf install libguestfs-xfs
 # using rh shell now
@@ -112,15 +112,15 @@ sudo dnf group install with-optional "C Development Tools and Libraries"
 ###
 # TODO(runcom): no real need
 #sudo dnf install docker-engine
-sudo dnf install docker
-sudo groupadd docker
-sudo usermod -aG docker amurdaca
+#sudo dnf install docker
+#sudo groupadd docker
+#sudo usermod -aG docker amurdaca
 su -c 'usermod -aG wheel amurdaca'
-sudo cp $DOTFILES_ROOT/sysconfig/docker /etc/sysconfig/docker
-sudo systemctl enable docker
+#sudo cp $DOTFILES_ROOT/sysconfig/docker /etc/sysconfig/docker
+#sudo systemctl enable docker
 #sudo cp $DOTFILES_ROOT/docker.service /etc/systemd/system/docker.service
 #sudo cp $DOTFILES_ROOT/docker.socket /etc/systemd/system/docker.socket
-sudo systemctl start docker
+#sudo systemctl start docker
 
 curl https://sh.rustup.rs -sSf | sh
 
@@ -174,10 +174,10 @@ sudo dnf install akmod-tp_smapi akmod-acpi_call
 sudo sed -i.bak s/SystemMaxUse=/SystemMaxUse=16M/g /etc/systemd/journald.conf
 sudo systemctl daemon-reload
 
-sudo dnf -y install unrar vagrant-libvirt
+sudo dnf -y install vagrant-libvirt
 
 # fedora pkgs
-sudo dnf install fedora-packager gofed
+sudo dnf install fedora-packager 
 fedora-packager-setup
 sudo usermod -a -G mock amurdaca
 mkdir $HOME/fedora-scm
@@ -215,17 +215,6 @@ sudo systemctl restart libvirtd
 set -e
 
 echo ''
-
-install_docker_creds_helper () {
-	tmp="$(mktemp -d)"
-	git clone https://github.com/docker/docker-credential-helpers "$tmp/docker-credential-helpers"
-	pushd "$tmp/docker-credential-helpers"
-	sudo dnf -y install libsecret-devel
-	make secretservice
-	sudo cp bin/* /usr/local/bin/
-	popd
-	rm -rf "$tmp"
-}
 
 install_kem () {
 	cp $DOTFILES_ROOT/kem.sh $HOME/.kem.sh
@@ -319,16 +308,6 @@ install_config () {
   #echo '================================='
 #}
 
-install_irssi_fnotify () {
-  rm -rf $HOME/.irssi-fnotify.sh
-  cp $DOTFILES_ROOT/irssi-fnotify.sh $HOME/.irssi-fnotify.sh
-}
-
-install_rpmmacros () {
-  rm -rf $HOME/.rpmmacros
-  cp $DOTFILES_ROOT/rpmmacros $HOME/.rpmmacros
-}
-
 install_xstuff () {
   rm -rf $HOME/.Xdefaults
   rm -rf $HOME/.Xresources
@@ -341,13 +320,6 @@ install_xstuff () {
   # ugly hack for the filco keypad... and equal sign doesn't work at all...
   sudo cp $DOTFILES_ROOT/00-cypress.conf /usr/share/X11/xorg.conf.d
 }
-
-#install_i3stuff () {
-  #rm -rf $HOME/.i3
-  #mkdir $HOME/.i3
-  #cp $DOTFILES_ROOT/i3/config $HOME/.i3/config
-  ## TODO(runcom): i3 status file
-#}
 
 install_rhpaste () {
   rm -rf $HOME/.pastebinit.xml
@@ -368,7 +340,6 @@ install_irssi_fnotify
 install_rpmmacros
 install_xstuff
 #install_i3stuff
-#install_docker_creds_helper
 
 echo '========================================================'
 echo '========================================================'
