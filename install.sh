@@ -50,7 +50,7 @@ DOTFILES_ROOT=`pwd`
 #EOF'
 #sudo dnf clean all
 sudo dnf -y update
-sudo dnf install mosh git-email terminator zsh cmake htop python-devel ctags vim-enhanced jq the_silver_searcher vim-X11 ruby ruby-devel gnome-tweak-tool gnome-shell-extension-pomodoro graphviz perl-Text-CharWidth krb5-workstation google-chrome-stable golang libvirt-sandbox mercurial recode python-ldap pastebinit 'dnf-command(system-upgrade)' keepassx terminus-fonts pidgin overpass-fonts tokei unrar
+sudo dnf install mosh git-email terminator zsh cmake htop python-devel ctags vim-enhanced jq the_silver_searcher vim-X11 ruby ruby-devel gnome-tweak-tool gnome-shell-extension-pomodoro graphviz perl-Text-CharWidth krb5-workstation google-chrome-stable golang libvirt-sandbox mercurial recode python-ldap pastebinit 'dnf-command(system-upgrade)' keepassx terminus-fonts pidgin overpass-fonts tokei unrar awscli
 
 sudo systemctl enable --now fstrim.timer
 
