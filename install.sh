@@ -123,6 +123,11 @@ su -c 'usermod -aG wheel amurdaca'
 #sudo systemctl start docker
 
 curl https://sh.rustup.rs -sSf | sh
+# RUNCOM
+#
+# install rclone https://rclone.org/install/#macos-installation-from-precompiled-binary
+#
+#
 
 # enable updates-testing
 #sudo dnf config-manager --set-enabled updates-testing
